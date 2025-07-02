@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a066b63e84ece21449da70506c93e7f2
+timeCreated: 1464111435
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 63382
+  packageName: GAZ Ammo
+  packageVersion: 1.0
+  assetPath: Assets/GAZ Ammo/Scene/GAZ Ammo.unity
+  uploadId: 121230
