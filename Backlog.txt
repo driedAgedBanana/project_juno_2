@@ -1,2 +1,5 @@
 07 - 02 - 2025
 Create project.
+
+05 - 08 - 2025
+Adding weapon, set up new input system and create the first basic movement.
