@@ -27,10 +27,19 @@
                     "name": "Fire",
                     "type": "Button",
                     "id": "25b915d8-4186-4133-a75d-a5ddc7a0751e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Leaning",
+                    "type": "Value",
+                    "id": "efa68cc7-31a5-4d08-b761-dc476bab0d7e",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -251,6 +260,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5692fc3-9150-44f2-b0d4-3061eb2c7266",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Leaning",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee81abf4-7b2b-4288-883e-c9f774823a60",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Leaning",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
