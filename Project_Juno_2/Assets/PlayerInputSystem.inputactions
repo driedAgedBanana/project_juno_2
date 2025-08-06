@@ -24,6 +24,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Lean",
+                    "type": "Value",
+                    "id": "67085e55-e480-411e-a67b-9c9611e60e05",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Fire",
                     "type": "Button",
                     "id": "25b915d8-4186-4133-a75d-a5ddc7a0751e",
@@ -33,13 +42,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Leaning",
-                    "type": "Value",
-                    "id": "efa68cc7-31a5-4d08-b761-dc476bab0d7e",
-                    "expectedControlType": "Axis",
+                    "name": "Running",
+                    "type": "Button",
+                    "id": "070a8580-a075-4510-86e9-68518958c735",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SlowWalk",
+                    "type": "Button",
+                    "id": "29a4a54f-6127-4790-a9d7-bd820a6bbbdb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -176,6 +194,39 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "One Modifier",
+                    "id": "97e568f6-d6f5-44da-acc8-8d04498d358c",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "a7834a96-4550-4637-b3d8-8676df4c8398",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "4f75ea2a-48ce-4dbf-8ca9-ad253f3194f4",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "c1f7a91b-d0fd-4a62-997e-7fb9b69bf235",
                     "path": "<Gamepad>/rightStick",
@@ -264,24 +315,57 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "a5692fc3-9150-44f2-b0d4-3061eb2c7266",
-                    "path": "",
+                    "name": "Leaning",
+                    "id": "461676db-9c2c-448a-bc93-7fe31f33a880",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Leaning",
+                    "action": "Lean",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "088aa340-daa7-479e-8b30-896df576cb5c",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lean",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "046e0672-198e-4a09-a8e5-f29ac0f666d8",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lean",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "8e8f0d45-6f8e-4f5f-aa49-60b16d84a6d3",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Running",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ee81abf4-7b2b-4288-883e-c9f774823a60",
-                    "path": "<Keyboard>/q",
+                    "id": "555a25a8-097f-4741-bd84-a1a9bf7c4eb4",
+                    "path": "<Keyboard>/alt",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Leaning",
+                    "action": "SlowWalk",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

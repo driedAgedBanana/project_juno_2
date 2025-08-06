@@ -6,3 +6,5 @@ Adding weapon, set up new input system and create the first basic movement.
 
 06 - 08 - 2025
 Adding move-look mechanic.
+Adding leaning mechanic.
+Adding running, slow walk and stamina mechanic.
