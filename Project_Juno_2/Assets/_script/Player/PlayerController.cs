@@ -32,10 +32,10 @@ public class PlayerController : MonoBehaviour
 
     private float _coolDownTimer;
 
-    [SerializeField] private bool _isSlowWalk;
-    [SerializeField] private bool _isRunning;
-    [SerializeField] private bool _runButtonPressed;
-    [SerializeField] private bool _isMoving;
+    private bool _isSlowWalk;
+    private bool _isRunning;
+    private bool _runButtonPressed;
+    private bool _isMoving;
 
     [Header("Crouching Mechanic (in development, not working right now)")]
     public bool isCrouching;
@@ -79,10 +79,24 @@ public class PlayerController : MonoBehaviour
     {
         if (_isAlive)
         {
-            HandleLook();
-            HandleMovement();
             HandleLeaning();
             RegenerateStamina();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (_isAlive)
+        {
+            HandleMovement();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (_isAlive)
+        {
+            HandleLook();
         }
     }
 
@@ -93,7 +107,8 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up * mouseX);
         _xRotation = Mathf.Clamp(_xRotation - mouseY, -_xClamp, _xClamp);
-        camHolder.localRotation = Quaternion.Slerp(camHolder.localRotation, Quaternion.Euler(_xRotation, 0f, 0f), Time.deltaTime * 10f);
+        camHolder.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+
     }
 
     private void HandleMovement()
@@ -176,11 +191,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnRun(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed)
+        if (ctx.performed)
         {
             _runButtonPressed = true;
         }
-        if(ctx.canceled)
+        if (ctx.canceled)
         {
             _runButtonPressed = false;
         }
@@ -188,11 +203,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnSlowWalk(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed)
+        if (ctx.performed)
         {
             _isSlowWalk = true;
         }
-        if(ctx.canceled)
+        if (ctx.canceled)
         {
             _isSlowWalk = false;
         }
