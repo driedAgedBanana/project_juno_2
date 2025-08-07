@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _isAlive = true;
+        _leaningAllowed = true;
         currentStamina = maxStamina;
     }
 
@@ -165,7 +166,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        _canRun = _runButtonPressed && _isMoving && !_isCrouching && currentStamina > 0 && !_isSliding && !_sprintBlockedAfterSlide && !_leaningAllowed;
+        _canRun = _runButtonPressed && _isMoving && !_isCrouching && currentStamina > 0 && !_isSliding && !_leaningAllowed;
         float speed = _isCrouching ? crouchSpeed : (_canRun ? runSpeed : (_isSlowWalk ? slowWalkSpeed : moveSpeed));
 
         Vector3 movement = transform.right * _moveInput.x + transform.forward * _moveInput.y;
@@ -181,7 +182,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             _isRunning = false;
-
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -207,32 +207,33 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeaning()
     {
-        if (_isRunning)
+        if (!_leaningAllowed)
         {
-            _leaningAllowed = false;
-            // Instantly reset rotation when sprinting
-            _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, _targetLeanRotation, Time.deltaTime * leaningSpeed);
             return;
         }
-
-        _leaningAllowed = true;
-        _leaningAllowed = !_isRunning;
-        if (_leaningDirection > 0) // lean right
+        else 
         {
-            _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, -leaningAmount);
+            if (_leaningDirection > 0) // lean right
+            {
+                _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, -leaningAmount);
+            }
+            else if (_leaningDirection < 0) // lean left
+            {
+                _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, leaningAmount);
+            }
+            else
+            {
+                _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
+            }
         }
-        else if (_leaningDirection < 0) // lean left
-        {
-            _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, leaningAmount);
-        }
-        else
-        {
-            _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
-        }
-
         // smoothly transition to the target lean rotation
         transform.localRotation = Quaternion.Slerp(transform.localRotation, _targetLeanRotation, Time.deltaTime * leaningSpeed);
+    }
+
+    private void ResetLeaning()
+    {
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, _targetLeanRotation, Time.deltaTime * leaningSpeed);
+        transform.localRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
     }
 
     private bool CanStandUp()
@@ -315,7 +316,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnLean(InputAction.CallbackContext ctx)
     {
-        if (_isRunning) return;
+        if (_sprintBlockedAfterSlide) return;
 
         float leaningInput = ctx.ReadValue<float>();
         _leaningDirection = leaningInput;
@@ -323,18 +324,23 @@ public class PlayerController : MonoBehaviour
 
     public void OnRun(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (ctx.performed && _isMoving)
         {
+            ResetLeaning();
+
             if (_isCrouching && CanStandUp())
             {
                 StandUp();
             }
+            _isRunning = true;
             _runButtonPressed = true;
             _leaningAllowed = false;
+
         }
 
         if (ctx.canceled)
         {
+            _leaningAllowed = true;
             _runButtonPressed = false;
             _canRun = true;
             _sprintBlockedAfterSlide = false;
