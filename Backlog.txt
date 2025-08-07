@@ -14,3 +14,4 @@ Testing some stuff, added cinemachine but not using it.
 Adding crouching mechanic.
 Adding sliding.
 Adding cancel crouch when pressing shift key.
+Adding leaning reset when running.
