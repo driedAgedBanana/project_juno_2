@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 _lookDirection;
     [Range(0f, 90f)] private float _xClamp = 50f;
     private float _xRotation;
+    private Vector3 _originalCamPosition;
+    [SerializeField] private Transform _camHolder;
 
     [Header("Movement Mechanic")]
     public float moveSpeed = 5f;
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour
     public float staminaFastGainRate;
     public float coolDownTime;
 
+    private bool _canRun;
     private float _coolDownTimer;
 
     private bool _isSlowWalk;
@@ -37,15 +41,35 @@ public class PlayerController : MonoBehaviour
     private bool _runButtonPressed;
     private bool _isMoving;
 
-    [Header("Crouching Mechanic (in development, not working right now)")]
-    public bool isCrouching;
-    public float crouchSpeed = 2f;
+    [Header("Crouching Mechanic")]
+    public float crouchSpeed;
+    public float crouchHeight = 1f;
+    public float standHeight = 2f;
+    public float crouchCamY = 0.8f;
+    public float standCamY = 1.6f;
+
+    private bool _isCrouching;
+
+    private CapsuleCollider _playerCollider;
+
+    public LayerMask obstacleLayer;
+
+    [Header("Sliding Mechanic")]
+    public float slideForce = 12f;
+    public float slideDuration = 0.8f;
+    public float minRunTimeBeforeSlide = 1.5f;
+    public float slidingStaminaDrainRate = 30f;
+    private bool _sprintBlockedAfterSlide = false;
+
+    [SerializeField] private float _runTimer = 0f;
+    [SerializeField] private bool _isSliding = false;
+    [SerializeField] private float _slideTimer = 0f;
 
     [Header("Leaning Mechanic")]
     public float leaningAmount = 20f;
     public float leaningSpeed = 15f;
 
-    private bool _canLean;
+    private bool _leaningAllowed;
     private Quaternion _targetLeanRotation;
     private float _leaningDirection;
 
@@ -65,6 +89,9 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        _playerCollider = GetComponent<CapsuleCollider>();
+        _originalCamPosition = camHolder.localPosition;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -81,8 +108,28 @@ public class PlayerController : MonoBehaviour
         {
             HandleLeaning();
             RegenerateStamina();
+
+            // Tracking how long player have been running
+            if (_isRunning)
+            {
+                _runTimer += Time.deltaTime;
+            }
+            else
+            {
+                _runTimer = 0f;
+            }
+
+            if (_isSliding)
+            {
+                _slideTimer += Time.deltaTime;
+                if (_slideTimer >= slideDuration)
+                {
+                    StopSliding();
+                }
+            }
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -113,27 +160,32 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        bool canRun = _runButtonPressed && _isMoving && !isCrouching && currentStamina > 0;
-        float speed = isCrouching ? crouchSpeed : (canRun ? runSpeed : (_isSlowWalk ? slowWalkSpeed : moveSpeed));
+        if (_isSliding)
+        {
+            return;
+        }
+
+        _canRun = _runButtonPressed && _isMoving && !_isCrouching && currentStamina > 0 && !_isSliding && !_sprintBlockedAfterSlide && !_leaningAllowed;
+        float speed = _isCrouching ? crouchSpeed : (_canRun ? runSpeed : (_isSlowWalk ? slowWalkSpeed : moveSpeed));
 
         Vector3 movement = transform.right * _moveInput.x + transform.forward * _moveInput.y;
         rb.linearVelocity = new Vector3(movement.x * speed, rb.linearVelocity.y, movement.z * speed);
         _isMoving = _moveInput.magnitude > 0.01f;
 
-        if (canRun)
+        if (_canRun)
         {
             currentStamina -= staminaDrainRate * Time.deltaTime;
             _coolDownTimer = 0f;
             _isRunning = true;
-            Debug.Log("Running!");
         }
         else
         {
             _isRunning = false;
-            Debug.Log("Or not...");
+
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+        Debug.Log(speed);
     }
 
     private void RegenerateStamina()
@@ -155,7 +207,17 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeaning()
     {
-        _canLean = true;
+        if (_isRunning)
+        {
+            _leaningAllowed = false;
+            // Instantly reset rotation when sprinting
+            _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, _targetLeanRotation, Time.deltaTime * leaningSpeed);
+            return;
+        }
+
+        _leaningAllowed = true;
+        _leaningAllowed = !_isRunning;
         if (_leaningDirection > 0) // lean right
         {
             _targetLeanRotation = Quaternion.Euler(0, transform.localEulerAngles.y, -leaningAmount);
@@ -173,6 +235,74 @@ public class PlayerController : MonoBehaviour
         transform.localRotation = Quaternion.Slerp(transform.localRotation, _targetLeanRotation, Time.deltaTime * leaningSpeed);
     }
 
+    private bool CanStandUp()
+    {
+        float radius = _playerCollider.radius * 0.95f;
+        float startY = transform.position.y + crouchHeight / 2f;
+        float endY = transform.position.y + standHeight / 2f;
+
+        Vector3 point1 = new Vector3(transform.position.x, startY, transform.position.z);
+        Vector3 point2 = new Vector3(transform.position.x, endY, transform.position.z);
+
+        Debug.DrawLine(point1, point2, Color.red, 1f);
+
+        return !Physics.CheckCapsule(point1, point2, radius, obstacleLayer);
+    }
+
+    private void CrouchDown()
+    {
+        _isCrouching = true;
+        _playerCollider.height = crouchHeight;
+
+        // Lower the camera
+        camHolder.localPosition = new Vector3(camHolder.localPosition.x, crouchCamY, camHolder.localPosition.z);
+    }
+
+    private void StandUp()
+    {
+        if (!CanStandUp())
+        {
+            Debug.Log("There is something above player!");
+            return;
+        }
+
+        _isCrouching = false;
+        _playerCollider.height = standHeight;
+
+        camHolder.localPosition = new Vector3(camHolder.localPosition.x, standCamY, camHolder.localPosition.z);
+    }
+
+    private void StartSliding()
+    {
+        _isSliding = true;
+        _isCrouching = true;
+
+        CrouchDown();
+
+        Vector3 slideDirection = rb.linearVelocity.normalized;
+        rb.AddForce(slideDirection * slideForce, ForceMode.VelocityChange);
+
+        if (_isSliding)
+        {
+            currentStamina -= slidingStaminaDrainRate * Time.deltaTime;
+            _slideTimer = 0f;
+        }
+
+        Debug.Log("Start to slide!");
+    }
+
+    private void StopSliding()
+    {
+        _isSliding = false;
+        _sprintBlockedAfterSlide = true;
+        _canRun = false;
+
+        //StandUp();
+        Debug.Log("Stop Sliding!");
+    }
+
+    #region Inputs
+
     public void OnMove(InputAction.CallbackContext ctx)
     {
         _moveInput = ctx.ReadValue<Vector2>();
@@ -185,6 +315,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnLean(InputAction.CallbackContext ctx)
     {
+        if (_isRunning) return;
+
         float leaningInput = ctx.ReadValue<float>();
         _leaningDirection = leaningInput;
     }
@@ -193,13 +325,22 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed)
         {
+            if (_isCrouching && CanStandUp())
+            {
+                StandUp();
+            }
             _runButtonPressed = true;
+            _leaningAllowed = false;
         }
+
         if (ctx.canceled)
         {
             _runButtonPressed = false;
+            _canRun = true;
+            _sprintBlockedAfterSlide = false;
         }
     }
+
 
     public void OnSlowWalk(InputAction.CallbackContext ctx)
     {
@@ -212,4 +353,29 @@ public class PlayerController : MonoBehaviour
             _isSlowWalk = false;
         }
     }
+
+    public void OnCrouch(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            if (_isRunning && _runTimer >= minRunTimeBeforeSlide && !_isSliding && _canRun)
+            {
+                StartSliding();
+            }
+            else
+            {
+                if (_isCrouching)
+                {
+                    StandUp();
+                }
+                else
+                {
+                    CrouchDown();
+                }
+            }
+        }
+    }
+
+
+    #endregion
 }

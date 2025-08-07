@@ -9,3 +9,8 @@ Adding move-look mechanic.
 Adding leaning mechanic.
 Adding running, slow walk and stamina mechanic.
 Testing some stuff, added cinemachine but not using it.
+
+07 - 08 - 2025
+Adding crouching mechanic.
+Adding sliding.
+Adding cancel crouch when pressing shift key.
