@@ -18,3 +18,4 @@ Adding leaning reset when running.
 
 08 - 08 - 2025
 Adding weapon sway and bobbing when walking.
+Adding aiming for weapon.
