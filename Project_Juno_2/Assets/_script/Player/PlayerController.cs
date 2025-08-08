@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
     private Vector2 _moveInput;
 
-    private bool _isAlive = true;
+    public bool isAlive = true;
     public Rigidbody rb;
 
     [Header("Camera Settings")]
@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float slowWalkSpeed = 2f;
     public float runSpeed = 10f;
+
+    public LayerMask groundLayer;
+    public GameObject groundChecker;
+    public float groundCheckDistance = 0.2f;
 
     // Stamina for running
     public float currentStamina;
@@ -73,6 +77,8 @@ public class PlayerController : MonoBehaviour
     private Quaternion _targetLeanRotation;
     private float _leaningDirection;
 
+    public Vector2 GetMovementInput() => _moveInput;
+    public Vector2 GetLookInput() => _lookDirection;
 
     private void Awake()
     {
@@ -97,7 +103,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _isAlive = true;
+        isAlive = true;
         _leaningAllowed = true;
         currentStamina = maxStamina;
     }
@@ -105,9 +111,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_isAlive)
+        if (isAlive)
         {
             HandleLeaning();
+            IsGrounded();
             RegenerateStamina();
 
             // Tracking how long player have been running
@@ -128,13 +135,17 @@ public class PlayerController : MonoBehaviour
                     StopSliding();
                 }
             }
+
+            if(IsGrounded())
+            {
+                Debug.Log("Player is on the ground!");
+            }
         }
     }
 
-
     private void FixedUpdate()
     {
-        if (_isAlive)
+        if (isAlive)
         {
             HandleMovement();
         }
@@ -142,7 +153,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_isAlive)
+        if (isAlive)
         {
             HandleLook();
         }
@@ -157,6 +168,11 @@ public class PlayerController : MonoBehaviour
         _xRotation = Mathf.Clamp(_xRotation - mouseY, -_xClamp, _xClamp);
         camHolder.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
+    }
+
+    public bool IsGrounded()
+    {
+        return Physics.Raycast(groundChecker.transform.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 
     private void HandleMovement()

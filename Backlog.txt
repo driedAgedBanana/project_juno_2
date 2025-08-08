@@ -15,3 +15,6 @@ Adding crouching mechanic.
 Adding sliding.
 Adding cancel crouch when pressing shift key.
 Adding leaning reset when running.
+
+08 - 08 - 2025
+Adding weapon sway and bobbing when walking.

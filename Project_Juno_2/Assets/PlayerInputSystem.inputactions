@@ -33,6 +33,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Aiming",
+                    "type": "Button",
+                    "id": "f604e7aa-3de2-49f7-b11e-89e23aa675d9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Fire",
                     "type": "Button",
                     "id": "25b915d8-4186-4133-a75d-a5ddc7a0751e",
@@ -386,6 +395,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7d413acc-3b1b-45b2-a27c-2f70a79bcecc",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Aiming",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
