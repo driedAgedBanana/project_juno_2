@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class WeaponBase : MonoBehaviour
+public class WeaponBase : MonoBehaviour, IWeapon
 {
     private bool _isAlive;
 
+    private bool _isAiming;
+    public bool IsAiming => _isAiming;
+    public Transform WeaponTransform => weapon;
+
     [Header("Aiming")]
     public Camera mainCam;
-    private bool _isAiming;
     [HideInInspector] public bool isAiming => _isAiming;
     public Transform weapon;
     public Transform defaultPosition;

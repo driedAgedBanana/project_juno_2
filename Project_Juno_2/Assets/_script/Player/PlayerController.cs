@@ -135,11 +135,6 @@ public class PlayerController : MonoBehaviour
                     StopSliding();
                 }
             }
-
-            if(IsGrounded())
-            {
-                Debug.Log("Player is on the ground!");
-            }
         }
     }
 
@@ -201,7 +196,6 @@ public class PlayerController : MonoBehaviour
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-        Debug.Log(speed);
     }
 
     private void RegenerateStamina()
@@ -273,6 +267,7 @@ public class PlayerController : MonoBehaviour
 
         // Lower the camera
         camHolder.localPosition = new Vector3(camHolder.localPosition.x, crouchCamY, camHolder.localPosition.z);
+        rb.AddForce(Vector3.down * 3f, ForceMode.Impulse);
     }
 
     private void StandUp()

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class WeaponSwayAndBob : MonoBehaviour
 {
-    public WeaponBase weaponBase;
     public static WeaponSwayAndBob Instance;
+    private IWeapon currentWeapon;
 
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -21,10 +21,13 @@ public class WeaponSwayAndBob : MonoBehaviour
     public float smoothness = 10f;
     private float _smoothRotation = 12f;
 
+    private float _aimSmoothness = 15f;
+    private float _aimSmoothRotation = 12f;
+
     [Header("Bobbing")]
     public float speedCurve;
-    private float _curveSin { get => Mathf.Sin(speedCurve);}
-    private float _curveCos { get => Mathf.Cos(speedCurve);}
+    private float _curveSin { get => Mathf.Sin(speedCurve); }
+    private float _curveCos { get => Mathf.Cos(speedCurve); }
 
     public Vector3 travelLimit = Vector3.one * 0.025f;
     public Vector3 bobbingLimit = Vector3.one * 0.01f;
@@ -71,12 +74,17 @@ public class WeaponSwayAndBob : MonoBehaviour
     {
         // Getting the input information from the playermovement script
         moveInput = PlayerController.Instance.GetMovementInput().normalized;
-        lookInput =  PlayerController.Instance.GetLookInput(); 
+        lookInput = PlayerController.Instance.GetLookInput();
+    }
+
+    public void SetCurrentWeapon(IWeapon weapon)
+    {
+        currentWeapon = weapon;
     }
 
     private void WeaponSway()
     {
-        float aimMultiplier = (weaponBase != null && weaponBase.isAiming) ? 0.3f : 1f;
+        float aimMultiplier = (currentWeapon != null && currentWeapon.IsAiming) ? 0.3f : 1f;
 
         // Multiplies the mouse input by rotationStep so the weapon move the opposite the camera / mouse movement
         Vector3 invertLook = lookInput * -rotationStep;
@@ -88,7 +96,7 @@ public class WeaponSwayAndBob : MonoBehaviour
 
     private void SwayRotation()
     {
-        float aimMultiplier = (weaponBase != null && weaponBase.isAiming) ? 0.3f : 1f;
+        float aimMultiplier = (currentWeapon != null && currentWeapon.IsAiming) ? 0.3f : 1f;
 
         // The same for Weapon sway but for rotation instead of position
         Vector2 invertLook = lookInput * -rotationStep;
@@ -100,15 +108,29 @@ public class WeaponSwayAndBob : MonoBehaviour
 
     private void CompositePositionRotation()
     {
-        // Smoothly blend weapon's position and rotation between current position and new position
-        transform.localPosition = Vector3.Lerp(transform.localPosition, _swayPosition + _bobbingPosition, Time.deltaTime * smoothness);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_swayEulerRotation) * Quaternion.Euler(_bobbingEulerRotation), Time.deltaTime * _smoothRotation);
+        if (currentWeapon == null) return;
+
+        if (currentWeapon.IsAiming)
+        {
+            // Lock to steady aim position/rotation
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.identity, Time.deltaTime * _aimSmoothRotation);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, Time.deltaTime * _aimSmoothness);
+        }
+        else
+        {
+            // Normal sway & bob
+            transform.localPosition = Vector3.Lerp(transform.localPosition, _swayPosition + _bobbingPosition, Time.deltaTime * smoothness);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_swayEulerRotation) * Quaternion.Euler(_bobbingEulerRotation), Time.deltaTime * _smoothRotation);
+        }
     }
+
 
     private void BobbingOffset()
     {
+        //if (currentWeapon != null && currentWeapon.IsAiming) return;
+
         // Increases speedCurve over time -> drives bobbing animation. Bobbing is stronger if player is moving and grounded
-        speedCurve += Time.deltaTime * (PlayerController.Instance.IsGrounded() ? (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)) * bobbingExaggeration: 1f) + 0.01f;
+        speedCurve += Time.deltaTime * (PlayerController.Instance.IsGrounded() ? (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)) * bobbingExaggeration : 1f) + 0.01f;
 
         // Calculates X/Y/Z offsets based on sine/cosine waves.
         _bobbingPosition.x = (_curveCos * bobbingLimit.x * (PlayerController.Instance.IsGrounded() ? 1 : 0) - moveInput.x * travelLimit.x);
@@ -118,6 +140,8 @@ public class WeaponSwayAndBob : MonoBehaviour
 
     private void BobbingRotation()
     {
+        //if (currentWeapon != null && currentWeapon.IsAiming) return;
+
         // Tilts weapon slightly when walking. If standing still, the effect is smaller.
         _bobbingEulerRotation.x = (moveInput != Vector2.zero ? multiplier.x * (Mathf.Sin(2 * speedCurve)) : multiplier.x * (Mathf.Sin(2 * speedCurve) / 2));
         _bobbingEulerRotation.y = ((moveInput != Vector2.zero ? multiplier.y * _curveCos : 0));

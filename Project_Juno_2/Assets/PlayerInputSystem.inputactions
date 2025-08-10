@@ -76,6 +76,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "WeaponSelectKeyboard",
+                    "type": "Button",
+                    "id": "83a93997-11b4-4fce-9ad8-a193437433b2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WeaponSelectMouseWheel",
+                    "type": "Value",
+                    "id": "5b0544a2-2a3f-494b-b7c1-09ef895a0d2a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -406,6 +424,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "89e65e38-2535-446d-8dd1-42217e16dcd2",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "WeaponSelectKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "452e8aa9-6fc1-4421-8c2a-7caa0589cee6",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "WeaponSelectKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31f7ded7-4c6c-4ca8-8bd4-d76d48017ad2",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "WeaponSelectMouseWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
