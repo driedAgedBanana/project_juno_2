@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     private bool _isCrouching;
 
-    private CapsuleCollider _playerCollider;
+    [SerializeField] private CapsuleCollider _playerCollider;
 
     public LayerMask obstacleLayer;
 
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        _playerCollider = GetComponent<CapsuleCollider>();
+        //_playerCollider = GetComponent<CapsuleCollider>();
         _originalCamPosition = camHolder.localPosition;
     }
 

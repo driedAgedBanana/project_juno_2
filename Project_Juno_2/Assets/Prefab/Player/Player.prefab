@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4261182892796785893}
+  - component: {fileID: 6502036119519522873}
   m_Layer: 0
   m_Name: DefaultPosition
   m_TagString: Untagged
@@ -33,6 +34,20 @@ Transform:
   - {fileID: 4816216871275110981}
   m_Father: {fileID: 4752119370524274316}
   m_LocalEulerAnglesHint: {x: -0.392, y: 0, z: 19.79}
+--- !u!114 &6502036119519522873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481151828518339688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3f12d415328fcd47a8e47a43e431557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayAndBob: {fileID: 6008751693150595546}
+  switchTime: 0.2
 --- !u!1 &905927311436820572
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1461806667819660152
 Transform:
   m_ObjectHideFlags: 0
@@ -479,6 +494,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f604e7aa-3de2-49f7-b11e-89e23aa675d9
     m_ActionName: 'Player/Aiming[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 83a93997-11b4-4fce-9ad8-a193437433b2
+    m_ActionName: Player/Weapon Select
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6502036119519522873}
+        m_TargetAssemblyTypeName: WeaponManager, Assembly-CSharp
+        m_MethodName: OnSwitchingWeapon
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5b0544a2-2a3f-494b-b7c1-09ef895a0d2a
+    m_ActionName: Player/WeaponSelectMouseWheel
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -762,7 +797,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4752119370524274316}
   - component: {fileID: 6008751693150595546}
-  - component: {fileID: 4459895879800253000}
   m_Layer: 0
   m_Name: WeaponSlot
   m_TagString: Untagged
@@ -810,20 +844,6 @@ MonoBehaviour:
   bobbingLimit: {x: 0.01, y: 0.01, z: 0.01}
   bobbingExaggeration: 3
   multiplier: {x: 2, y: 2, z: 2}
---- !u!114 &4459895879800253000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5778839799713045086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3f12d415328fcd47a8e47a43e431557, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swayAndBob: {fileID: 6008751693150595546}
-  startingWeapon: {fileID: 4817813895881402739}
 --- !u!1 &7575927427813840414
 GameObject:
   m_ObjectHideFlags: 0
@@ -900,7 +920,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1523676449047648, guid: 71a059c980dc52243b2154ab50c99633, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4741506853990710, guid: 71a059c980dc52243b2154ab50c99633, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1014,31 +1034,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.16957916
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.101710245
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.11900156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.98425335
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.041427564
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00722643
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.1716886
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4415442749456168, guid: 19a4283c8def9f648b29af560a7feaa4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

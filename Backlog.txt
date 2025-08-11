@@ -26,3 +26,4 @@ Connecting weapon base, bob and sway script together.
 
 11 - 08 - 2025
 Creating weapon switching.
+Learning new stuff about IK, might create new scene to work on.
