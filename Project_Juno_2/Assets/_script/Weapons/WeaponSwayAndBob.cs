@@ -54,7 +54,7 @@ public class WeaponSwayAndBob : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        speedCurve = 0;
+        speedCurve = 200f;
     }
 
     // Update is called once per frame

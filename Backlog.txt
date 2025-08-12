@@ -33,3 +33,5 @@ Give it IK and attach it to weapon.
 12 - 08 - 2025
 Removing whole body, just leave the hand.
 No need for a full body movement rework.
+Seperating weapon manager and weapon switching into different scripts.
+Adding weapon switch... Game's broken...
