@@ -35,3 +35,6 @@ Removing whole body, just leave the hand.
 No need for a full body movement rework.
 Seperating weapon manager and weapon switching into different scripts.
 Adding weapon switch... Game's broken...
+
+13 - 08 - 2025
+Adding animation for weapons.
