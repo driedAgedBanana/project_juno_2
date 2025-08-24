@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6338063566526132461}
   m_Layer: 0
-  m_Name: Deagle_LeftHand_Grip
+  m_Name: LeftHandIK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -534,7 +534,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4729067124831414135}
   m_Layer: 0
-  m_Name: Deagle_RightHand_Grip
+  m_Name: RightHandIK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
