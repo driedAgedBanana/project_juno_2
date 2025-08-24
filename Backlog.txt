@@ -29,7 +29,3 @@ Creating weapon switching.
 Learning new stuff about IK, might create new scene to work on.
 Adding character as person, not basic shape anymore.
 Give it IK and attach it to weapon.
-
-12 - 08 - 2025
-Removing whole body, just leave the hand.
-No need for a full body movement rework.
